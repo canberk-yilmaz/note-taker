@@ -1,6 +1,22 @@
 <template>
   <div class="notes">
-    <div class="card has-background-success-dark p-4 mb-5">
+    <AddEditNote
+      v-model="newNote"
+      ref="addEditNoteRef"
+      placeholder="Add a new note..."
+      label="Add Note"
+    >
+      <template #buttons>
+        <button
+          @click="addNote"
+          class="button is-link has-background-success"
+          :disabled="!newNote"
+        >
+          Add New Note
+        </button>
+      </template>
+    </AddEditNote>
+    <!-- <div class="card has-background-success-dark p-4 mb-5">
       <div class="field">
         <div class="control">
           <textarea
@@ -23,7 +39,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
     <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
   </div>
 </template>
@@ -32,6 +48,7 @@
 //imports
 import { ref } from "vue";
 import Note from "@/components/Notes/TheNote.vue";
+import AddEditNote from "@/components/Notes/AddEditNote.vue";
 import { useStoreNotes } from "@/stores/storeNotes";
 
 //store
@@ -41,12 +58,11 @@ const storeNotes = useStoreNotes();
 //notes
 
 const newNote = ref("");
-const newNoteRef = ref("");
+const addEditNoteRef = ref(null);
 
 const addNote = () => {
   storeNotes.addNote(newNote.value);
-
   newNote.value = "";
-  newNoteRef.value.focus();
+  addEditNoteRef.value.focusTextArea();
 };
 </script>
