@@ -46,7 +46,7 @@
 
 <script setup>
 //imports
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Note from "@/components/Notes/TheNote.vue";
 import AddEditNote from "@/components/Notes/AddEditNote.vue";
 import { useStoreNotes } from "@/stores/storeNotes";
@@ -65,4 +65,12 @@ const addNote = () => {
   newNote.value = "";
   addEditNoteRef.value.focusTextArea();
 };
+
+//watch characters in newNote
+
+watch(newNote, (newValue) => {
+  if (newValue.length === 100) {
+    console.log("max characters reached");
+  }
+});
 </script>

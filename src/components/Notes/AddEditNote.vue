@@ -11,6 +11,7 @@
           :placeholder="placeholder"
           ref="textAreaRef"
           v-autofocus
+          maxlength="100"
         />
       </div>
     </div>
