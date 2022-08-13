@@ -46,10 +46,11 @@
 
 <script setup>
 //imports
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import Note from "@/components/Notes/TheNote.vue";
 import AddEditNote from "@/components/Notes/AddEditNote.vue";
 import { useStoreNotes } from "@/stores/storeNotes";
+import { useWatchCharacters } from "@/use/useWatchCharacters";
 
 //store
 
@@ -66,11 +67,7 @@ const addNote = () => {
   addEditNoteRef.value.focusTextArea();
 };
 
-//watch characters in newNote
+// watch char
 
-watch(newNote, (newValue) => {
-  if (newValue.length === 100) {
-    console.log("max characters reached");
-  }
-});
+useWatchCharacters(newNote, 100);
 </script>

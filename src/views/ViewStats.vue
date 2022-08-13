@@ -19,17 +19,28 @@
       </tbody>
     </table>
     <input
+      v-model="likeApp"
       class="input"
       type="text"
       placeholder="Do you like our app?"
       v-autofocus
+      maxlength="50"
     />
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useStoreNotes } from "@/stores/storeNotes.js";
 import { vAutofocus } from "@/directives/vAutofocus.js";
+import { useWatchCharacters } from "@/use/useWatchCharacters.js";
 
 const storeNotes = useStoreNotes();
+const likeApp = ref(null);
+
+//watch
+
+useWatchCharacters(likeApp, 50);
+
+// like app data
 </script>
