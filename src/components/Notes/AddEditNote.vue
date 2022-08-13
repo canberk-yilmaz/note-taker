@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from "vue";
-
+import { vAutofocus } from "@/directives/vAutofocus.js";
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   modelValue: {
@@ -58,12 +58,4 @@ const focusTextArea = () => {
 defineExpose({
   focusTextArea,
 });
-
-// directives
-
-const vAutofocus = {
-  mounted: (el) => {
-    el.focus();
-  },
-};
 </script>
