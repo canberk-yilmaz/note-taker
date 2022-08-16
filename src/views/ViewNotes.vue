@@ -1,5 +1,5 @@
 <template>
-  <div class="notes">
+  <div class="notes" v-auto-animate>
     <AddEditNote
       v-model="newNote"
       ref="addEditNoteRef"
@@ -40,7 +40,12 @@
         </div>
       </div>
     </div> -->
-    <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
+    <Note
+      v-for="note in storeNotes.notes"
+      :key="note.id"
+      :note="note"
+      v-auto-animate
+    />
   </div>
 </template>
 
