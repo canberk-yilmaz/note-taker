@@ -4,8 +4,9 @@
       <div class="content">
         {{ note.content }}
       </div>
-      <div class="characters has-text-right">
-        <small>
+      <div class="columns is-mobile characters">
+        <small class="column"> {{ dateFormatted }} </small>
+        <small class="column has-text-right">
           {{ characterLength }}
           {{ characterLength - 1 ? "characters" : "character" }}
         </small>
@@ -40,12 +41,18 @@
 <script setup>
 import { computed, reactive } from "vue";
 import ModalDeleteNoteVue from "./ModalDeleteNote.vue";
+import { useDateFormat } from "@vueuse/core";
 
 const props = defineProps({
   note: {
     type: Object,
     required: true,
   },
+});
+
+const dateFormatted = computed(() => {
+  let date = new Date(parseInt(props.note.date));
+  return useDateFormat(date, "DD-MM-YYYY HH:mm").value;
 });
 
 // const emits = defineEmits(["deleteClicked"]);
