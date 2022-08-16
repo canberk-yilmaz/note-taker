@@ -16,36 +16,27 @@
         </button>
       </template>
     </AddEditNote>
-    <!-- <div class="card has-background-success-dark p-4 mb-5">
-      <div class="field">
-        <div class="control">
-          <textarea
-            v-model="newNote"
-            class="textarea"
-            placeholder="Add a new note"
-            ref="newNoteRef"
-          />
-        </div>
-      </div>
 
-      <div class="field is-grouped is-grouped-right">
-        <div class="control">
-          <button
-            @click="addNote"
-            class="button is-link has-background-success"
-            :disabled="!newNote"
-          >
-            Add New Note
-          </button>
-        </div>
-      </div>
-    </div> -->
-    <Note
-      v-for="note in storeNotes.notes"
-      :key="note.id"
-      :note="note"
-      v-auto-animate
+    <progress
+      v-if="!storeNotes.notesLoaded"
+      class="progress is-medium is-success"
+      max="100"
     />
+
+    <template v-if="storeNotes.notesLoaded">
+      <Note
+        v-for="note in storeNotes.notes"
+        :key="note.id"
+        :note="note"
+        v-auto-animate
+      />
+    </template>
+    <div
+      v-if="!storeNotes.notes.length"
+      class="py-6 is-size-4 has-text-centered has-text-grey-light is-family-monospace"
+    >
+      No notes yet.
+    </div>
   </div>
 </template>
 
