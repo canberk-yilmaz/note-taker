@@ -1,45 +1,63 @@
 // stores/counter.js
 import { defineStore } from "pinia";
 import { db } from "@/js/firebase";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  query,
+  orderBy,
+} from "firebase/firestore";
+
+const notesCollectionRef = collection(db, "notes");
 
 export const useStoreNotes = defineStore("storeNotes", {
   state: () => {
     return {
-      notes: [
-        {
-          id: "id1",
-          content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Animi nisi delectus, tempora id fugiat ex impedit, esse porro saepe necessitatibus blanditiis earum atque eius magnam facere consectetur aliquam voluptates mollitia.",
-        },
-        {
-          id: "id2",
-          content: "Shorter note",
-        },
-      ],
+      notes: [],
+      notesLoaded: false,
     };
   },
   actions: {
-    addNote(newNoteContent) {
+    async getNotes() {
+      const q = query(notesCollectionRef, orderBy("date", "desc"));
+      this.notesLoaded = false;
+      onSnapshot(q, (querySnapshot) => {
+        let notes = [];
+        querySnapshot.forEach((doc) => {
+          let note = {
+            id: doc.id,
+            content: doc.data().content,
+            date: doc.data().date,
+          };
+          notes.push(note);
+        });
+
+        this.notes = notes;
+        this.notesLoaded = true;
+      });
+    },
+
+    async addNote(newNoteContent) {
       let newDate = new Date().getTime();
-      let id = newDate.toString();
+      let date = newDate.toString();
 
-      let note = {
-        id,
+      await addDoc(notesCollectionRef, {
         content: newNoteContent,
-      };
-
-      this.notes.unshift(note);
+        date,
+      });
     },
 
-    deleteNote(idToDelete) {
-      this.notes = this.notes.filter((note) => note.id !== idToDelete);
+    async deleteNote(idToDelete) {
+      await deleteDoc(doc(notesCollectionRef, idToDelete));
     },
-    updateNote(idToUpdate, newContent) {
-      this.notes = this.notes.map((note) => {
-        if (note.id === idToUpdate) {
-          note.content = newContent;
-        }
-        return note;
+
+    async updateNote(idToUpdate, newContent) {
+      await updateDoc(doc(notesCollectionRef, idToUpdate), {
+        content: newContent,
       });
     },
   },
