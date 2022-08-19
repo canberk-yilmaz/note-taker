@@ -3,7 +3,6 @@
     <div class="container is-max-desktop">
       <div class="navbar-brand">
         <div class="navbar-item is-size-3">NoteTaker</div>
-
         <a
           role="button"
           class="navbar-burger"
@@ -41,6 +40,14 @@
             @click="showMobileNav = false"
             >Stats</RouterLink
           >
+          <button
+            v-if="storeAuth.user.id"
+            class="button is-small is-rounded"
+            style="margin: auto 0"
+            @click="logout"
+          >
+            Log out {{ storeAuth.user.email }}
+          </button>
         </div>
       </div>
     </div>
@@ -51,6 +58,9 @@
 //imports
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { useStoreAuth } from "@/stores/storeAuth";
+
+const storeAuth = useStoreAuth();
 
 //mobile nav
 
@@ -70,6 +80,11 @@ onClickOutside(
     ignore: [navbarBurgerRef],
   }
 );
+
+const logout = () => {
+  storeAuth.logoutUser();
+  showMobileNav.value = false;
+};
 </script>
 
 <style>
