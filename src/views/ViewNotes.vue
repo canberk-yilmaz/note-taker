@@ -9,7 +9,7 @@
       <template #buttons>
         <button
           @click="addNote"
-          class="button is-link has-background-success"
+          class="button is-link has-background-success is-rounded"
           :disabled="!newNote"
         >
           Add New Note
