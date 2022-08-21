@@ -1,13 +1,11 @@
-// stores/counter.js
 import { defineStore } from "pinia";
-import { auth } from "@/js/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-
+import { auth } from "@/js/firebase";
 import { useStoreNotes } from "@/stores/storeNotes";
 
 export const useStoreAuth = defineStore("storeAuth", {
@@ -19,6 +17,7 @@ export const useStoreAuth = defineStore("storeAuth", {
   actions: {
     init() {
       const storeNotes = useStoreNotes();
+
       onAuthStateChanged(auth, (user) => {
         if (user) {
           this.user.id = user.uid;
@@ -28,6 +27,7 @@ export const useStoreAuth = defineStore("storeAuth", {
         } else {
           this.user = {};
           this.router.replace("/auth");
+          storeNotes.clearNotes();
         }
       });
     },
@@ -38,31 +38,24 @@ export const useStoreAuth = defineStore("storeAuth", {
         credentials.password
       )
         .then((userCredential) => {
-          // eslint-disable-next-line no-unused-vars
           const user = userCredential.user;
-          // console.log("user: ", user);
         })
         .catch((error) => {
-          console.log(error.message);
+          console.log("error.message: ", error.message);
+        });
+    },
+    loginUser(credentials) {
+      signInWithEmailAndPassword(auth, credentials.email, credentials.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          console.log("error.message: ", error.message);
         });
     },
     logoutUser() {
       signOut(auth)
-        .then(() => {
-          // console.log("user signed out");
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    loginUser(credentials) {
-      // console.log(credentials);
-      signInWithEmailAndPassword(auth, credentials.email, credentials.password)
-        .then((userCredential) => {
-          // eslint-disable-next-line no-unused-vars
-          const user = userCredential.user;
-          // console.log("user: ", user);
-        })
+        .then(() => {})
         .catch((error) => {
           console.log(error.message);
         });

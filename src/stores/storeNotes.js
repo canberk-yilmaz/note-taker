@@ -15,6 +15,7 @@ import { useStoreAuth } from "@/stores/storeAuth";
 
 let notesCollectionRef = null;
 let notesCollectionQuery = null;
+let getNotesSnapshot = null;
 
 export const useStoreNotes = defineStore("storeNotes", {
   state: () => {
@@ -33,7 +34,8 @@ export const useStoreNotes = defineStore("storeNotes", {
     async getNotes() {
       const q = notesCollectionQuery;
       this.notesLoaded = false;
-      onSnapshot(q, (querySnapshot) => {
+
+      getNotesSnapshot = onSnapshot(q, (querySnapshot) => {
         let notes = [];
         querySnapshot.forEach((doc) => {
           let note = {
@@ -47,6 +49,12 @@ export const useStoreNotes = defineStore("storeNotes", {
         this.notes = notes;
         this.notesLoaded = true;
       });
+    },
+    clearNotes() {
+      this.notes = [];
+      if (getNotesSnapshot) getNotesSnapshot();
+      // we trigger unsubscribe if we got the snapshot
+      // setting onSnapshot to a variable and triggering it unsubscribes
     },
 
     async addNote(newNoteContent) {
