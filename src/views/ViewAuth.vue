@@ -24,6 +24,7 @@
                 class="input"
                 type="email"
                 placeholder="e.g. alexsmith@gmail.com"
+                autocomplete="email"
               />
             </div>
           </div>
@@ -35,6 +36,7 @@
                 class="input"
                 type="password"
                 placeholder="Please enter a password..."
+                :autocomplete="register ? 'new-password' : 'current-password'"
               />
             </div>
           </div>
