@@ -15,8 +15,8 @@
         <div class="title has-text-centered">
           {{ formTitle }}
         </div>
-        <form @submit.prevent="onSubmit" v-auto-animate>
-          <div class="field">
+        <form @submit.prevent="onSubmit">
+          <div class="field" v-auto-animate>
             <label class="label">Email</label>
             <div class="control">
               <input
