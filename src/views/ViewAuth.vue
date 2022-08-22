@@ -63,7 +63,7 @@
 
           <div class="field is-grouped is-grouped-right">
             <p class="control">
-              <button class="button is-primary is-rounded">
+              <button :disabled="disabled" class="button is-primary is-rounded">
                 {{ formTitle }}
               </button>
             </p>
@@ -119,6 +119,17 @@ watch(storeAuth, (newValue) => {
 watch(register, () => {
   //reset errors when switching between login and register
   v$.value.$reset();
+});
+
+//disabled state
+
+const disabled = computed(() => {
+  return (
+    !credentials.email ||
+    !credentials.password ||
+    v$.value.password.$invalid ||
+    v$.value.email.$invalid
+  );
 });
 
 //submit
