@@ -15,7 +15,7 @@
         <div class="title has-text-centered">
           {{ formTitle }}
         </div>
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent="onSubmit" v-auto-animate>
           <div class="field">
             <label class="label">Email</label>
             <div class="control">
@@ -23,12 +23,20 @@
                 v-model="credentials.email"
                 class="input"
                 type="email"
-                placeholder="e.g. alexsmith@gmail.com"
+                placeholder="e.g. cyilmaz089@gmail.com"
                 autocomplete="email"
+                @blur="v$.email.$touch"
               />
             </div>
+            <div
+              class="input-errors has-text-danger p-2"
+              v-for="error of v$.email.$errors"
+              :key="error.$uid"
+            >
+              <div class="error-msg">*{{ error.$message }}</div>
+            </div>
           </div>
-          <div class="field">
+          <div class="field" v-auto-animate>
             <label class="label">Password</label>
             <div class="control">
               <input
@@ -37,9 +45,22 @@
                 type="password"
                 placeholder="Please enter a password..."
                 :autocomplete="register ? 'new-password' : 'current-password'"
+                @blur="v$.password.$touch"
               />
             </div>
+            <div
+              class="input-errors has-text-danger p-2"
+              v-for="error of v$.password.$errors"
+              :key="error.$uid"
+            >
+              <div class="error-msg">*{{ error.$message }}</div>
+            </div>
           </div>
+
+          <div v-if="storeAuth.error" class="input-errors has-text-danger p-2">
+            <div class="error-msg" v-auto-animate>*Check your credentials</div>
+          </div>
+
           <div class="field is-grouped is-grouped-right">
             <p class="control">
               <button class="button is-primary is-rounded">
@@ -53,8 +74,11 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, watch } from "vue";
+import useVuelidate from "@vuelidate/core";
 import { useStoreAuth } from "@/stores/storeAuth";
+import { required, email, minLength } from "@vuelidate/validators";
+// import { capitalize } from "@/utils/capitalize";
 
 //store
 
@@ -68,26 +92,43 @@ const formTitle = computed(() => {
   return register.value ? "Register" : "Login";
 });
 
-//submit
-
-const onSubmit = () => {
-  if (!credentials.email && !credentials.password) {
-    alert("Please enter an email and password");
-  } else {
-    if (register.value) {
-      storeAuth.registerUser(credentials);
-    } else {
-      storeAuth.loginUser(credentials);
-    }
-  }
-};
-
 // credentials
 
 const credentials = reactive({
   email: "",
   password: "",
 });
+
+const rules = {
+  email: { required, email }, // Matches state.firstName
+  password: { required, minLength: minLength(6) }, // Matches state.lastName
+};
+
+const v$ = useVuelidate(rules, credentials);
+
+watch(storeAuth, (newValue) => {
+  // show errors
+
+  if (newValue.error && storeAuth.error) {
+    setTimeout(() => {
+      storeAuth.error = null;
+    }, 5000);
+  }
+});
+
+//submit
+
+const onSubmit = async () => {
+  await v$.value.$validate().then((valid) => {
+    if (valid) {
+      if (register.value) {
+        storeAuth.registerUser(credentials);
+      } else {
+        storeAuth.loginUser(credentials);
+      }
+    }
+  });
+};
 </script>
 
 <style scoped>

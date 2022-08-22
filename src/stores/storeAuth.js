@@ -12,6 +12,7 @@ export const useStoreAuth = defineStore("storeAuth", {
   state: () => {
     return {
       user: {},
+      error: null,
     };
   },
   actions: {
@@ -37,11 +38,11 @@ export const useStoreAuth = defineStore("storeAuth", {
         credentials.email,
         credentials.password
       )
-        .then((userCredential) => {
-          const user = userCredential.user;
-        })
+        // .then((userCredential) => {
+        // const user = userCredential.user;
+        // })
         .catch((error) => {
-          console.log("error.message: ", error.message);
+          this.error = error.code;
         });
     },
     loginUser(credentials) {
@@ -50,14 +51,14 @@ export const useStoreAuth = defineStore("storeAuth", {
           const user = userCredential.user;
         })
         .catch((error) => {
-          console.log("error.message: ", error.message);
+          this.error = error.code;
         });
     },
     logoutUser() {
       signOut(auth)
         .then(() => {})
         .catch((error) => {
-          console.log(error.message);
+          this.error = error.code;
         });
     },
   },
