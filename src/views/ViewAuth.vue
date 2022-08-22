@@ -116,6 +116,11 @@ watch(storeAuth, (newValue) => {
   }
 });
 
+watch(register, () => {
+  //reset errors when switching between login and register
+  v$.value.$reset();
+});
+
 //submit
 
 const onSubmit = async () => {
