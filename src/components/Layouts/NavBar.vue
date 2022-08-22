@@ -32,14 +32,20 @@
             to="/"
             class="navbar-item"
             active-class="is-active"
-            @click="showMobileNav = false"
+            @click="
+              showMobileNav = false;
+              showToast();
+            "
             >Notes</RouterLink
           >
           <RouterLink
             to="/stats"
             class="navbar-item"
             active-class="is-active"
-            @click="showMobileNav = false"
+            @click="
+              showMobileNav = false;
+              showToast();
+            "
             >Stats</RouterLink
           >
           <button
@@ -65,8 +71,24 @@
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { useStoreAuth } from "@/stores/storeAuth";
+import { toast } from "bulma-toast";
 
 const storeAuth = useStoreAuth();
+
+//toast
+
+const showToast = () => {
+  if (!storeAuth.user.id) {
+    toast({
+      message: "You need to log in to access this page",
+      type: "is-danger",
+      position: "top-center",
+      closeOnClick: true,
+      pauseOnHover: true,
+      opacity: 0.8,
+    });
+  }
+};
 
 //mobile nav
 
