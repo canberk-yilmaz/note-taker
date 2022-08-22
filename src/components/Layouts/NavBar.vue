@@ -2,7 +2,9 @@
   <nav class="navbar is-success" role="navigation" aria-label="main navigation">
     <div class="container is-max-desktop">
       <div class="navbar-brand">
-        <div class="navbar-item is-size-3">NoteTaker</div>
+        <RouterLink class="navbar-item is-size-3" to="/">
+          NoteTaker
+        </RouterLink>
         <a
           role="button"
           class="navbar-burger"
@@ -41,12 +43,16 @@
             >Stats</RouterLink
           >
           <button
-            v-if="storeAuth.user.id"
             class="button is-small is-rounded"
+            :class="{
+              'is-ghost': !showMobileNav,
+              'has-text-white': !showMobileNav,
+            }"
+            v-if="storeAuth.user.id"
             style="margin: auto 0"
             @click="logout"
           >
-            Log out {{ storeAuth.user.email }}
+            Log out - {{ storeAuth.user.email }}
           </button>
         </div>
       </div>
